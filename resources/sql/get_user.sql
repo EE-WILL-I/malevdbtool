@@ -1,0 +1,1 @@
+select count(ID) from users where login like '@a0' and passwd like '@a1'
