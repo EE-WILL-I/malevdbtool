@@ -1,5 +1,6 @@
-package com.malevdb.MailService;
+package com.malevdb.SpringConfigurations;
 
+import com.malevdb.MailService.MailSender;
 import com.malevdb.Utils.PropertyReader;
 import com.malevdb.Utils.PropertyType;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +12,6 @@ public class MailServiceConfiguration {
     @Bean
     @Scope("singleton")
     public MailSender mailSender() {
-        return new MailSender(PropertyType.MAILSERVICE.toString().toLowerCase());
+        return new MailSender(PropertyReader.getProperties(PropertyType.MAILSERVICE));
     }
 }
