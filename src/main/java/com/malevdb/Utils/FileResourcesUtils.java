@@ -1,5 +1,7 @@
 package com.malevdb.Utils;
 
+import com.malevdb.Application.Logger;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -30,5 +32,9 @@ public class FileResourcesUtils {
         lines.forEach(line -> stringBuilder.append(line));
 
         return stringBuilder.toString();
+    }
+
+    public static FileInputStream getFileAsStream(String filePath) throws IOException {
+            return new FileInputStream(filePath);
     }
 }

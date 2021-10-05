@@ -26,6 +26,9 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
+        if(!request.getParameterMap().containsKey("user"))
+            this.getServletContext().getRequestDispatcher("/authorization.jsp").forward(request, response);
+
         String user = request.getParameter("user");
         String passwd = request.getParameter("passwd");
 

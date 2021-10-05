@@ -30,14 +30,21 @@ public class SQLExecutor {
     public PreparedStatement prepareStatement(String query, String... args) throws SQLException, IllegalArgumentException {
         if(query.isEmpty())
             throw new IllegalArgumentException("Empty SQL query");
-        for(int i = 0; i < args.length; i++) {
+        query = insertArgs(query, args);
+        return connection.prepareStatement(query);
+    }
+
+    public String insertArgs(String query, String[] args) { return  insertArgs(query, args, 0); }
+
+    public String insertArgs(String query, String[] args, int argsBias) {
+        for(int i = argsBias; i < args.length; i++) {
             if(query.contains("@a" + i))
-             query = query.replace("@a" + i, args[i]);
+             query = query.replace("@a" + i, args[i - argsBias]);
             else
                 throw new IllegalArgumentException(lastLoadedResource + " don't receives " + i + " parameter(s)");
         }
         query = query.replaceAll("'@a(\\w*)'", "null");
-        return connection.prepareStatement(query);
+        return query;
     }
 
     public ResultSet executeSelect(String query, String... args) {

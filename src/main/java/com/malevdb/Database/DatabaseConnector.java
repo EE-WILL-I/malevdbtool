@@ -10,16 +10,16 @@ public class DatabaseConnector {
      */
     public static Connection connection;
     public static Statement statement;
-    private static final String JDBC_DRIVER = PropertyReader.getProperty(PropertyType.DATABASE, "datasource.driver-class-name");
-    private static final String DATABASE_URL = PropertyReader.getProperty(PropertyType.DATABASE, "datasource.url");
-    private static final String DATABASE_SCHEMA = PropertyReader.getProperty(PropertyType.DATABASE, "datasource.schema");
-    private static final String CONNECTION_ARGS = PropertyReader.getProperty(PropertyType.DATABASE, "connection.args");
+    private static final String JDBC_DRIVER = PropertyReader.getPropertyKey(PropertyType.DATABASE, "datasource.driver-class-name");
+    private static final String DATABASE_URL = PropertyReader.getPropertyKey(PropertyType.DATABASE, "datasource.url");
+    private static final String DATABASE_SCHEMA = PropertyReader.getPropertyKey(PropertyType.DATABASE, "datasource.schema");
+    private static final String CONNECTION_ARGS = PropertyReader.getPropertyKey(PropertyType.DATABASE, "connection.args");
 
     /**
      * User and Password
      */
-    private static final String USER = PropertyReader.getProperty(PropertyType.DATABASE, "datasource.username");
-    private static final String PASSWORD = PropertyReader.getProperty(PropertyType.DATABASE, "datasource.password");
+    private static final String USER = PropertyReader.getPropertyKey(PropertyType.DATABASE, "datasource.username");
+    private static final String PASSWORD = PropertyReader.getPropertyKey(PropertyType.DATABASE, "datasource.password");
 
     public static boolean setConnection(String... args) throws ClassNotFoundException, SQLException {
         Logger.Log(DatabaseConnector.class,"Registering JDBC driver...");
