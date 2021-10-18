@@ -4,7 +4,7 @@
 <nav>
     <%String style = PropertyReader.getPropertyKey(PropertyType.STYLE, "header.nav");%>
     <div style="<%=style%>">
-    <a href="/index.jsp">Home</a> | <a href="/authorization.jsp">Login</a> | <a href="#">About</a>
+    <a href="/index.jsp">Home</a> | <a href="/dataView">Data view</a> | <a href="/load">Load File</a> | <a href="/authorization.jsp">Login</a> | <a href="#">About</a>
     <div style="float: right; padding-right: 10px;">
         Search <input name="search">
     </div>

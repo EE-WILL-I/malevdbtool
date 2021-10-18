@@ -4,6 +4,9 @@
 <% String style_form = PropertyReader.getPropertyKey(PropertyType.STYLE, "authorization.form"); %>
 <% String background_color = PropertyReader.getPropertyKey(PropertyType.STYLE, "shared.background_color"); %>
 <html>
+<head>
+    <title>Data load</title>
+</head>
 <body>
 <jsp:include page="/WEB-INF/elements/header.jsp"/>
 <div>
@@ -16,26 +19,9 @@
         <ul>
             <button type="submit" name="Load file" value="load">Load File</button>
         </ul>
-        <div>
-            <p><%= request.getParameter("data") %></p>
-        </div>
-        <div>
-            <table>
-                <tr>
-                    <th>name</th>
-                    <th>desc</th>
-                    <th>contact<th>
-                </tr>
-
-                <c:forEach items="${key_list}" var="usr" varStatus="idx">
-                    <tr>
-                        <td>${usr.name}</td><td>${usr.desc}</td> <td>${usr.contact}</td>
-                    </tr>
-                </c:forEach>
-            </table>
-        </div>
     </div>
 </form>
 </div>
+<jsp:include page="/WEB-INF/elements/footer.jsp" />
 </body>
 </html>

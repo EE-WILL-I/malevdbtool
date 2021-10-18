@@ -40,29 +40,6 @@ public class DatabaseConnector {
         }
 
         statement = connection.createStatement();
-
-        SQLExecutor executor = SQLExecutor.getInstance();
-
-        //executor.executeUpdate(executor.loadSQLResource("insert_people.sql"), "Stas", "Michailov");
-
-        ResultSet resultSet = executor.executeSelect(executor.loadSQLResource("select_people.sql"), "*");
-
-        System.out.println("Retrieving data from database...");
-        System.out.println("\nDevelopers:");
-        while (resultSet.next()) {
-            String id = resultSet.getString("ID");
-            String firstName = resultSet.getString("FIRST_NAME");
-            String lastName = resultSet.getString("LAST_NAME");
-            String patronymic = resultSet.getString("PATRONYMIC");
-
-            System.out.println("\n================\n");
-            System.out.println("id: " + id);
-            System.out.println("First name: " + firstName);
-            System.out.println("Last name: " + lastName);
-            System.out.println("Patronymic: " + patronymic);
-        }
-
-        resultSet.close();
         return true;
     }
 
@@ -81,5 +58,10 @@ public class DatabaseConnector {
         Logger.Log(DatabaseConnector.class,"Closing connection and releasing resources...");
         statement.close();
         connection.close();
+    }
+
+    @Override
+    public void finalize() throws SQLException {
+        closeConnection();
     }
 }

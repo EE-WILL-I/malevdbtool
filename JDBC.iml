@@ -10,6 +10,7 @@
         <webroots>
           <root url="file://$MODULE_DIR$/src/main/WebContent" relative="/" />
         </webroots>
+        <sourceRoots />
       </configuration>
     </facet>
     <facet type="Spring" name="Spring">
