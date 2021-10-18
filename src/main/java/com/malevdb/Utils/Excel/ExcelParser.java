@@ -11,11 +11,12 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.sql.PreparedStatement;
 import java.util.*;
 
 public class ExcelParser {
-    public Vector<List<XSSFCell>> read(String path) {
+    public Vector<List<XSSFCell>> read(String path) throws FileNotFoundException {
         Vector<List<XSSFCell>> cellVectorHolder = new Vector<>();
         try{
             FileInputStream myInput = FileResourcesUtils.getFileAsStream(path);
@@ -34,6 +35,7 @@ public class ExcelParser {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            throw new FileNotFoundException("Can't load file");
         }
         System.out.println(cellVectorHolder.toString());
         return cellVectorHolder;

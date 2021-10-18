@@ -5,7 +5,6 @@
 <% String style_header = PropertyReader.getPropertyKey(PropertyType.STYLE, "shared.header"); %>
 <% String style_form = PropertyReader.getPropertyKey(PropertyType.STYLE, "authorization.form"); %>
 <% String background_color = PropertyReader.getPropertyKey(PropertyType.STYLE, "shared.background_color"); %>
-<% String failed_request = request.getParameterMap().containsKey("failed") ? "block" : "none"; %>
 <html>
 <body>
 <div>
@@ -23,7 +22,9 @@
         <ul>
             <input type="submit" value="Log in" />
         </ul>
-        <ul style="color: red; display: <%=failed_request%>">Authentication failed</ul>
+        <%if(request.getParameterMap().containsKey("failed")) {%>
+        <ul style="color: red;>">Authentication failed</ul>
+        <%}%>
     </div>
 </form>
 </div>

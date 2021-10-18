@@ -40,11 +40,14 @@ public class LoginServlet extends HttpServlet {
             if(result == 1) {
                 Logger.Log(this,"Login successful");
                 pwriter.println("Login successful");
+                request.getSession().setAttribute("username", user);
+                request.getSession().setAttribute("auth", "true");
                 this.getServletContext().getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
                 response.setStatus(200);
             } else {
                 Logger.Log(this,"Login failed");
                 pwriter.println("Login failed");
+                request.getSession().setAttribute("auth", "false");
                 this.getServletContext().getRequestDispatcher("/authorization.jsp?failed=true&").forward(request, response);
                 response.setStatus(401);
             }

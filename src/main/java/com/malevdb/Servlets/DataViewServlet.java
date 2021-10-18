@@ -20,9 +20,15 @@ import java.util.List;
 import java.util.Map;
 
 @WebServlet("/dataView")
-public class DataViewServlet extends HttpServlet {
+public class DataViewServlet extends SecureServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            checkUser(request, response);
+        } catch (Exception e)
+        {
+            return;
+        }
         List<Map<String, String>> data = new ArrayList<Map<String, String>>();
         List<String> headers = new ArrayList<>();
         SQLExecutor executor = SQLExecutor.getInstance();

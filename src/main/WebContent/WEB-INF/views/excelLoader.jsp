@@ -19,6 +19,9 @@
         <ul>
             <button type="submit" name="Load file" value="load">Load File</button>
         </ul>
+        <% if(request.getParameterMap().containsKey("notfound")) {%>
+        <ul style="color: red;>">File not found</ul>
+        <%}%>
     </div>
 </form>
 </div>
