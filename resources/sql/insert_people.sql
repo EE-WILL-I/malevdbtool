@@ -1,1 +1,1 @@
-INSERT INTO PEOPLE VALUES(null, '@a0','@a1','@a2')
+(null, '@a0','@a1','@a2', @a3)

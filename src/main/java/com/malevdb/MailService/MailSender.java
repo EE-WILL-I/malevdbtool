@@ -1,6 +1,6 @@
 package com.malevdb.MailService;
 
-import com.malevdb.Application.Logger;
+import com.malevdb.Application.Logging.Logger;
 import com.malevdb.SpringConfigurations.MailServiceConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -13,7 +13,6 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -40,7 +39,7 @@ public class MailSender {
     }
 
     public void sendMessage(String content, String subject, String... recipients) {
-        Logger.Log(MailSender.class, "Sending message...");
+        Logger.log(MailSender.class, "Sending message...", 4);
         addRecipients(recipients);
         MimeMessage message = prepareMessage(content, subject);
         send(message);
@@ -48,7 +47,7 @@ public class MailSender {
         StringBuilder recipientsString = new StringBuilder();
         for(String recipient : recipients)
             recipientsString.append(recipient);
-        Logger.Log(MailSender.class, "Message sent to: " + recipientsString.toString());
+        Logger.log(MailSender.class, "Message sent to: " + recipientsString.toString(), 1);
     }
 
     public void addRecipients(String[] recipients) {
@@ -60,7 +59,7 @@ public class MailSender {
         try {
             recipients.add(new InternetAddress(address));
         } catch (AddressException e) {
-            Logger.Log(MailSender.class, "Cannot add recipient " + address);
+            Logger.log(MailSender.class, "Cannot add recipient " + address, 2);
             e.printStackTrace();
         }
     }
@@ -84,7 +83,7 @@ public class MailSender {
         try {
             Transport.send(message);
         } catch (MessagingException e) {
-            Logger.Log(MailSender.class, "Cannot send message");
+            Logger.log(MailSender.class, "Cannot send message", 2);
             e.printStackTrace();
         }
     }

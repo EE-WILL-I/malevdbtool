@@ -1,6 +1,6 @@
 package com.malevdb.Utils;
 
-import com.malevdb.Application.Logger;
+import com.malevdb.Application.Logging.Logger;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -16,12 +16,12 @@ public class PropertyReader {
     private static final String PROPERTIES_PATH = FileResourcesUtils.RESOURCE_PATH + "properties/";
     private static final String FILE_POSTFIX = ".properties";
 
-    public static String getPropertyKey(PropertyType property, String key) {
+    public static String getPropertyValue(PropertyType property, String key) {
         if (getProperties(property) == null) {
-            Logger.Log(PropertyReader.class, "Cannot load key: " + key);
+            Logger.log(PropertyReader.class, "Cannot load key: " + key, 2);
             return "";
         }
-        Logger.Log(PropertyReader.class, "Key loaded: " + key);
+        Logger.log(PropertyReader.class, "Key loaded: " + key, 4);
         return PROPERTIES.getProperty(key);
     }
 
@@ -44,10 +44,10 @@ public class PropertyReader {
             PROPERTIES = new Properties();
             PROPERTIES.load(fileInputStream);
             PROPERTIES_MAP.put(property, PROPERTIES);
-            Logger.Log(PropertyReader.class, "Property loaded: " + property);
+            Logger.log(PropertyReader.class, "Property loaded: " + property, 4);
             return true;
         } catch (IOException e) {
-            Logger.Log(PropertyReader.class, "Cannot read property: " + property);
+            Logger.log(PropertyReader.class, "Cannot read property: " + property, 2);
             e.printStackTrace();
             return false;
         } finally {
@@ -58,5 +58,18 @@ public class PropertyReader {
                     e.printStackTrace();
                 }
         }
+    }
+
+    public static Properties loadServerProps() {
+        try {
+            fileInputStream = FileResourcesUtils.getFileAsStream(PROPERTIES_PATH + PropertyType.SERVER + FILE_POSTFIX);
+            PROPERTIES = new Properties();
+            PROPERTIES.load(fileInputStream);
+            Logger.loggingLevel = Integer.parseInt(PROPERTIES.getProperty("app.loggingLevel"));
+            return PROPERTIES;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

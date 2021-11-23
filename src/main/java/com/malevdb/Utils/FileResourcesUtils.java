@@ -1,6 +1,6 @@
 package com.malevdb.Utils;
 
-import com.malevdb.Application.Logger;
+import com.malevdb.Application.Logging.Logger;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -16,21 +16,17 @@ public class FileResourcesUtils {
     private static StringBuilder stringBuilder;
 
     public static String getFileDataAsString(String filePath) throws IOException, IllegalArgumentException {
+        Logger.log(FileResourcesUtils.class, "Loading resource at: " + filePath, 3);
         if (filePath.isEmpty())
             throw new IllegalArgumentException("Path is empty");
 
         Path path = Paths.get(RESOURCE_PATH + filePath);
-
         if (classLoader == null)
             classLoader = FileResourcesUtils.class.getClassLoader();
-
         stringBuilder = new StringBuilder();
-
-
         Stream<String> lines = Files.lines(path, StandardCharsets.UTF_8);
-
         lines.forEach(line -> stringBuilder.append(line));
-
+        Logger.log(FileResourcesUtils.class, "Resource loaded", 4);
         return stringBuilder.toString();
     }
 

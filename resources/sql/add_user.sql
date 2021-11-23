@@ -1,1 +1,1 @@
-insert into users values (null, "@a0", "@a1", @a2);
+insert into users values (null, lower('@a0'), MD5('@a1'), @a2);

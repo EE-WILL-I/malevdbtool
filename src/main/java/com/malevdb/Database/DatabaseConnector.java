@@ -1,5 +1,5 @@
 package com.malevdb.Database;
-import com.malevdb.Application.Logger;
+import com.malevdb.Application.Logging.Logger;
 import com.malevdb.Utils.*;
 
 import java.sql.*;
@@ -10,23 +10,23 @@ public class DatabaseConnector {
      */
     public static Connection connection;
     public static Statement statement;
-    private static final String JDBC_DRIVER = PropertyReader.getPropertyKey(PropertyType.DATABASE, "datasource.driver-class-name");
-    private static final String DATABASE_URL = PropertyReader.getPropertyKey(PropertyType.DATABASE, "datasource.url");
-    private static final String DATABASE_SCHEMA = PropertyReader.getPropertyKey(PropertyType.DATABASE, "datasource.schema");
-    private static final String CONNECTION_ARGS = PropertyReader.getPropertyKey(PropertyType.DATABASE, "connection.args");
+    private static final String JDBC_DRIVER = PropertyReader.getPropertyValue(PropertyType.DATABASE, "datasource.driver-class-name");
+    private static final String DATABASE_URL = PropertyReader.getPropertyValue(PropertyType.DATABASE, "datasource.url");
+    private static final String DATABASE_SCHEMA = PropertyReader.getPropertyValue(PropertyType.DATABASE, "datasource.schema");
+    private static final String CONNECTION_ARGS = PropertyReader.getPropertyValue(PropertyType.DATABASE, "connection.args");
 
     /**
      * User and Password
      */
-    private static final String USER = PropertyReader.getPropertyKey(PropertyType.DATABASE, "datasource.username");
-    private static final String PASSWORD = PropertyReader.getPropertyKey(PropertyType.DATABASE, "datasource.password");
+    private static final String USER = PropertyReader.getPropertyValue(PropertyType.DATABASE, "datasource.username");
+    private static final String PASSWORD = PropertyReader.getPropertyValue(PropertyType.DATABASE, "datasource.password");
 
     public static boolean setConnection(String... args) throws ClassNotFoundException, SQLException {
-        Logger.Log(DatabaseConnector.class,"Registering JDBC driver...");
+        PropertyReader.loadServerProps();
 
+        Logger.log(DatabaseConnector.class,"Registering JDBC driver...", 1);
         Class.forName(JDBC_DRIVER);
-
-        Logger.Log(DatabaseConnector.class,"Creating database connection...");
+        Logger.log(DatabaseConnector.class,"Creating database connection...", 1);
 
         try {
             if (args.length == 3)
@@ -34,7 +34,7 @@ public class DatabaseConnector {
             else
                 connection = DriverManager.getConnection(DATABASE_URL + DATABASE_SCHEMA + CONNECTION_ARGS, USER, PASSWORD);
         } catch (SQLException e) {
-            Logger.Log(DatabaseConnector.class,"Unable connect to database.");
+            Logger.log(DatabaseConnector.class,"Unable connect to database.", 2);
             e.printStackTrace();
             return false;
         }
@@ -55,7 +55,7 @@ public class DatabaseConnector {
     }
 
     public static void closeConnection() throws SQLException {
-        Logger.Log(DatabaseConnector.class,"Closing connection and releasing resources...");
+        Logger.log(DatabaseConnector.class,"Closing connection and releasing resources...", 1);
         statement.close();
         connection.close();
     }

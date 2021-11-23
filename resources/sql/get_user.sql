@@ -1,1 +1,1 @@
-select count(ID) from users where login like '@a0' and passwd like '@a1'
+select count(ID) from users where login like lower('@a0') and passwd like MD5('@a1');

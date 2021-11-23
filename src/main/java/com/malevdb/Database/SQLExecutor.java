@@ -1,6 +1,6 @@
 package com.malevdb.Database;
 
-import com.malevdb.Application.Logger;
+import com.malevdb.Application.Logging.Logger;
 import com.malevdb.SpringConfigurations.SQLExecutorConfiguration;
 import com.malevdb.Utils.FileResourcesUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,13 +111,13 @@ public class SQLExecutor {
     }
 
     private void logBeforeExecution() {
-        Logger.Log(this, "Executing query: " + lastLoadedResource);
+        Logger.log(this, "Executing query: " + lastLoadedResource, 1);
     }
 
     private void logAfterExecution(boolean successful) {
         if(successful)
-            Logger.Log(this, "Query executed");
+            Logger.log(this, "Query executed", 1);
         else
-            Logger.Log(this,"Query execution failed");
+            Logger.log(this,"Query execution failed", 2);
     }
 }
