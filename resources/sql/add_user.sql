@@ -1,1 +1,0 @@
-insert into users values (null, lower('@a0'), MD5('@a1'), @a2);

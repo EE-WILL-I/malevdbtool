@@ -10,11 +10,11 @@ import java.util.Map;
 import java.util.Properties;
 
 public class PropertyReader {
+    public static final String FILE_POSTFIX = ".properties";
     private static FileInputStream fileInputStream;
     private static Properties PROPERTIES;
     private static final Map<String, Properties> PROPERTIES_MAP = new HashMap<>();
     private static final String PROPERTIES_PATH = FileResourcesUtils.RESOURCE_PATH + "properties/";
-    private static final String FILE_POSTFIX = ".properties";
 
     public static String getPropertyValue(PropertyType property, String key) {
         if (getProperties(property) == null) {
@@ -39,17 +39,32 @@ public class PropertyReader {
     }
 
     private static boolean readProperty(String property) {
-        try {
-            fileInputStream = FileResourcesUtils.getFileAsStream(PROPERTIES_PATH + property + FILE_POSTFIX);
-            PROPERTIES = new Properties();
-            PROPERTIES.load(fileInputStream);
-            PROPERTIES_MAP.put(property, PROPERTIES);
+        PROPERTIES_MAP.put(property, loadProperty(PROPERTIES_PATH + property + FILE_POSTFIX));
             Logger.log(PropertyReader.class, "Property loaded: " + property, 4);
             return true;
+    }
+
+    public static Properties loadServerProps() {
+            PROPERTIES = loadProperty(FileResourcesUtils.RESOURCE_PATH + PropertyType.APPLICATION + FILE_POSTFIX);
+            PROPERTIES_MAP.put("application", PROPERTIES);
+            PROPERTIES = loadProperty(PROPERTIES_PATH + PropertyType.SERVER + FILE_POSTFIX);
+            Logger.loggingLevel = Byte.parseByte(PROPERTIES.getProperty("app.loggingLevel"));
+            return PROPERTIES;
+    }
+
+    public static String getStyle(String key) {
+        return getPropertyValue(PropertyType.STYLE, key);
+    }
+
+    public static Properties loadProperty(String path) {
+        try {
+        fileInputStream = FileResourcesUtils.getFileAsStream(path);
+        PROPERTIES = new Properties();
+        PROPERTIES.load(fileInputStream);
         } catch (IOException e) {
-            Logger.log(PropertyReader.class, "Cannot read property: " + property, 2);
+            Logger.log(PropertyReader.class, "Cannot read property at: " + path, 2);
             e.printStackTrace();
-            return false;
+            return null;
         } finally {
             if (fileInputStream != null)
                 try {
@@ -58,18 +73,6 @@ public class PropertyReader {
                     e.printStackTrace();
                 }
         }
-    }
-
-    public static Properties loadServerProps() {
-        try {
-            fileInputStream = FileResourcesUtils.getFileAsStream(PROPERTIES_PATH + PropertyType.SERVER + FILE_POSTFIX);
-            PROPERTIES = new Properties();
-            PROPERTIES.load(fileInputStream);
-            Logger.loggingLevel = Integer.parseInt(PROPERTIES.getProperty("app.loggingLevel"));
-            return PROPERTIES;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return PROPERTIES;
     }
 }

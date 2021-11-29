@@ -1,0 +1,1 @@
+select @a0 from active_user_sessions where @a1 = '@a2';

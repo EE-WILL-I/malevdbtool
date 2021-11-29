@@ -1,0 +1,62 @@
+/*general*/
+p, a {
+    font-family: Verdana;
+    font-size: 15px;
+    padding: 2px;
+    margin: 2px;
+}
+div {
+    background-color: #E0E0E0;
+}
+table {
+    margin: 10px;
+    width: 95%;
+    margin: auto;
+}
+th, tr, td, table {
+    border: 1px solid black;
+}
+h2, h3, h1 {
+    font-family: Verdana;
+    padding: 5px;
+    margin: 5px;
+}
+button {
+    padding: 3px;
+    margin: 5px;
+    font-family: Verdana;
+    font-size: 13px;
+}
+select {
+    padding: 5px;
+    margin: 5px;
+}
+nav {
+    text-align: left; margin-top: 10px; margin-bottom: 10px;
+}
+/*classes*/
+.row_input {
+    width: 100%;
+}
+.login {
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+}
+.delete_btn {
+    color: red;
+    padding: 1px;
+    margin: 1px;
+}
+.content_holder {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+/*id*/
+#nav_content {
+    text-align: left;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

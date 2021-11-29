@@ -1,7 +1,9 @@
 package com.malevdb.Application.Logging;
 
+import java.time.LocalDateTime;
+
 public class Logger {
-    public static int loggingLevel = 4;
+    public static byte loggingLevel = LoggingLevel.WARNING;
 
     public static void log(Object sender, Object data, int level) {
         if(data == null || sender == null)
@@ -13,7 +15,7 @@ public class Logger {
             senderName = ((Class)sender).getName();
         else
             senderName = sender.getClass().getName();
-        System.out.println(senderName + "  :  " + data.toString());
+        System.out.println(LocalDateTime.now() + "  " + LoggingLevel.getStringValue(level) + " " + senderName + "  : " + data.toString());
     }
 
     public static void log(Object sender, Object data) { log(sender, data, 1); }

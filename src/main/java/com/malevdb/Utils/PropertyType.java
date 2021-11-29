@@ -4,5 +4,6 @@ public enum PropertyType {
     SERVER,
     DATABASE,
     STYLE,
-    MAILSERVICE
+    MAILSERVICE,
+    APPLICATION
 }

@@ -22,11 +22,9 @@ public class DatabaseConnector {
     private static final String PASSWORD = PropertyReader.getPropertyValue(PropertyType.DATABASE, "datasource.password");
 
     public static boolean setConnection(String... args) throws ClassNotFoundException, SQLException {
-        PropertyReader.loadServerProps();
-
-        Logger.log(DatabaseConnector.class,"Registering JDBC driver...", 1);
+        Logger.log(DatabaseConnector.class,"Registering JDBC driver", 1);
         Class.forName(JDBC_DRIVER);
-        Logger.log(DatabaseConnector.class,"Creating database connection...", 1);
+        Logger.log(DatabaseConnector.class,"Creating database connection", 1);
 
         try {
             if (args.length == 3)
@@ -34,7 +32,7 @@ public class DatabaseConnector {
             else
                 connection = DriverManager.getConnection(DATABASE_URL + DATABASE_SCHEMA + CONNECTION_ARGS, USER, PASSWORD);
         } catch (SQLException e) {
-            Logger.log(DatabaseConnector.class,"Unable connect to database.", 2);
+            Logger.log(DatabaseConnector.class,"Unable connect to database", 2);
             e.printStackTrace();
             return false;
         }
@@ -55,7 +53,7 @@ public class DatabaseConnector {
     }
 
     public static void closeConnection() throws SQLException {
-        Logger.log(DatabaseConnector.class,"Closing connection and releasing resources...", 1);
+        Logger.log(DatabaseConnector.class,"Closing connection and releasing resources", 1);
         statement.close();
         connection.close();
     }

@@ -1,64 +1,53 @@
 package com.malevdb.Application.Servlets;
 import com.malevdb.Application.Logging.Logger;
+import com.malevdb.Application.SessionManagement.SessionManager;
+import com.malevdb.Application.SessionManagement.UserSession;
 import com.malevdb.Database.SQLExecutor;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-@WebServlet("/login")
-public class LoginServlet extends HttpServlet {
-    @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        PrintWriter pwriter;
-        try {
-            pwriter = response.getWriter();
-        } catch (IOException e) {
-            this.getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
-            response.setStatus(500);
-            return;
+@Controller
+public class LoginServlet {
+    @GetMapping("/login")
+    public String showForm(Model model, @ModelAttribute("failed") String failed) {
+        if(failed.equals("true")) {
+            model.addAttribute("displayError", "true");
         }
+        return "views/authorization";
+    }
 
-        if(!request.getParameterMap().containsKey("user"))
-            this.getServletContext().getRequestDispatcher("/authorization.jsp").forward(request, response);
-
-        String user = request.getParameter("user");
-        String passwd = request.getParameter("passwd");
-
+    @PostMapping("/login")
+    public String tryLogIn(HttpServletRequest request, RedirectAttributes attributes, @RequestParam(value = "login", defaultValue = "") String login, @RequestParam(value = "passwd", defaultValue = "") String passwd) {
         SQLExecutor executor = SQLExecutor.getInstance();
+        Logger.log(this, "Logging as: " + login +" "+ passwd);
+        ResultSet resultSet = executor.executeSelect(executor.loadSQLResource("get_user.sql"), "id", login, passwd);
         try {
-            ResultSet resultSet = executor.executeSelect(executor.loadSQLResource("get_user.sql"), user, passwd);
-            resultSet.next();
-            int result = resultSet.getInt(1);
-            if(result == 1) {
-                Logger.log(this,"Login successful", 3);
-                pwriter.println("Login successful");
-                request.getSession().setAttribute("username", user);
-                request.getSession().setAttribute("auth", "true");
-                this.getServletContext().getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
-                response.setStatus(200);
-            } else {
-                Logger.log(this,"Login failed", 3);
-                pwriter.println("Login failed");
-                request.getSession().setAttribute("auth", "false");
-                this.getServletContext().getRequestDispatcher("/authorization.jsp?failed=true&").forward(request, response);
-                response.setStatus(401);
+            if(resultSet.next()) {
+                String userId = String.valueOf(resultSet.getInt("id"));
+                request.getSession().setAttribute("user_name", login);
+                request.getSession().setAttribute("user_id", userId);
+                SessionManager.registerSession(request);
+                Logger.log(this, "Login successful", 3);
+                return "redirect:/";
             }
-        }  catch (SQLException e) {
-            Logger.log(this, "Login failed", 3);
+        } catch (SQLException e) {
             e.printStackTrace();
-            pwriter.println("Login failed");
-            this.getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
-            response.setStatus(401);
-        } finally {
-            pwriter.close();
         }
+        attributes.addFlashAttribute("failed", "true");
+        Logger.log(this, "Login failed", 3);
+        return "redirect:/login";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request) {
+        SessionManager.deregisterSession(request);
+        return "redirect:/login";
     }
 }
