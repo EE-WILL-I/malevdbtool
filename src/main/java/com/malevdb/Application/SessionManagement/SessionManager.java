@@ -14,12 +14,15 @@ public class SessionManager {
 
     public static boolean checkSession(HttpServletRequest request) {
         Logger.log(SessionManager.class, "Checking user session", 4);
+        if(request.getSession().getAttribute("authorized") != null)
+            return true;
         String ip = request.getRemoteAddr();
-        //sqlExecutor.executeCall(sqlExecutor.loadSQLResource("clean_timeout_sessions.sql"));
+        if(ip == null || ip.isEmpty())
+            ip = request.getHeader("X-FORWARDED-FOR");
         ResultSet resultSet = sqlExecutor.executeSelect(sqlExecutor.loadSQLResource("get_user_session.sql"),
-                "*", "user_ip", ip);
+                "*", ip, request.getSession().getId());
         try {
-            if( resultSet.next()) {
+            if(resultSet.next()) {
                 int userId = resultSet.getInt("user_id");
                 request.getSession().setAttribute("user_id", userId);
                 resultSet = sqlExecutor.executeSelect(sqlExecutor.loadSQLResource("select_any.sql"),
@@ -43,17 +46,22 @@ public class SessionManager {
         String id = request.getSession().getId();
         String userId = (String) request.getSession().getAttribute("user_id");
         String ip = request.getRemoteAddr();
+        if(ip == null || ip.isEmpty())
+            ip = request.getHeader("X-FORWARDED-FOR");
         UserSession usrSess = new UserSession(id, userId);
         request.getSession().setAttribute("user_session", usrSess);
         deregisterSession(request);
-        sqlExecutor.executeCall(sqlExecutor.loadSQLResource("clean_timeout_sessions.sql"));
+        //sqlExecutor.executeCall(sqlExecutor.loadSQLResource("clean_timeout_sessions.sql"));
         sqlExecutor.executeInsert(sqlExecutor.loadSQLResource("insert_active_user_sessions.sql"),
-                "active_user_sessions", id, userId, ip);
+                "active_user_sessions", id, userId, null, ip);
         return usrSess;
     }
 
     public static void deregisterSession(HttpServletRequest request) {
-            sqlExecutor.executeUpdate(sqlExecutor.loadSQLResource("delete_any.sql"),
-                    "active_user_sessions", "user_ip", request.getRemoteAddr());
+        String ip = request.getRemoteAddr();
+        if (ip == null || ip.isEmpty())
+            ip = request.getHeader("X-FORWARDED-FOR");
+        sqlExecutor.executeUpdate(sqlExecutor.loadSQLResource("delete_any.sql"),
+                "active_user_sessions", "user_ip = '" + ip + "' or id", request.getSession().getId());
     }
 }

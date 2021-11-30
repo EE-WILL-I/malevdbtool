@@ -45,9 +45,9 @@ public class PropertyReader {
     }
 
     public static Properties loadServerProps() {
-            PROPERTIES = loadProperty(FileResourcesUtils.RESOURCE_PATH + PropertyType.APPLICATION + FILE_POSTFIX);
+            PROPERTIES = loadProperty(FileResourcesUtils.RESOURCE_PATH + PropertyType.APPLICATION.toString().toLowerCase(Locale.ROOT) + FILE_POSTFIX);
             PROPERTIES_MAP.put("application", PROPERTIES);
-            PROPERTIES = loadProperty(PROPERTIES_PATH + PropertyType.SERVER + FILE_POSTFIX);
+            PROPERTIES = loadProperty(PROPERTIES_PATH + PropertyType.SERVER.toString().toLowerCase(Locale.ROOT) + FILE_POSTFIX);
             Logger.loggingLevel = Byte.parseByte(PROPERTIES.getProperty("app.loggingLevel"));
             return PROPERTIES;
     }

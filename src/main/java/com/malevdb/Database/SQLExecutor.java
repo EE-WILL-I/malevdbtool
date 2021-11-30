@@ -48,7 +48,7 @@ public class SQLExecutor {
                         if (query.contains("@a" + i + constant)) {
                             query = query.replace("@a" + i + constant, constant);
                             skip = true;
-                            break;
+                            //break;
                         }
                     }
                     if(!skip)

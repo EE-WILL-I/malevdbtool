@@ -39,14 +39,18 @@ public class MailSender {
     }
 
     public void sendMessage(String content, String subject, String... recipients) {
-        Logger.log(MailSender.class, "Sending message...", 4);
         addRecipients(recipients);
         MimeMessage message = prepareMessage(content, subject);
+        sendMessage(message);
+    }
+
+    public void sendMessage(MimeMessage message) {
+        Logger.log(MailSender.class, "Sending message...", 4);
         send(message);
 
         StringBuilder recipientsString = new StringBuilder();
-        for(String recipient : recipients)
-            recipientsString.append(recipient);
+        for(InternetAddress recipient : recipients)
+            recipientsString.append(recipient.getAddress());
         Logger.log(MailSender.class, "Message sent to: " + recipientsString.toString(), 1);
     }
 
@@ -77,6 +81,10 @@ public class MailSender {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public List<InternetAddress> getRecipients() {
+        return recipients;
     }
 
     private void send(MimeMessage message) {

@@ -47,7 +47,7 @@ public class Main extends SpringBootServletInitializer {
         //ferzine.findSolution();
 
         System.out.println("Loading server properties");
-        FileResourcesUtils.RESOURCE_PATH = ResourceUtils.getFile("classpath:application.properties").getParent() + "\\";
+        FileResourcesUtils.RESOURCE_PATH = ResourceUtils.getFile("classpath:application.properties").getParent() + "/";
         PropertyReader.loadServerProps();
         Logger.log(Main.class, "Starting the server...");
         SpringApplication.run(Main.class, args);

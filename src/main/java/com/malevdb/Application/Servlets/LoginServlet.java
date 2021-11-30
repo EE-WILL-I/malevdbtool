@@ -31,7 +31,8 @@ public class LoginServlet {
         try {
             if(resultSet.next()) {
                 String userId = String.valueOf(resultSet.getInt("id"));
-                request.getSession().setAttribute("user_name", login);
+                request.getSession().setAttribute("authorized", "true");
+                request.getSession().setAttribute("user_login", login);
                 request.getSession().setAttribute("user_id", userId);
                 SessionManager.registerSession(request);
                 Logger.log(this, "Login successful", 3);
@@ -48,6 +49,7 @@ public class LoginServlet {
     @GetMapping("/logout")
     public String logout(HttpServletRequest request) {
         SessionManager.deregisterSession(request);
+        request.getSession().removeAttribute("authorized");
         return "redirect:/login";
     }
 }
