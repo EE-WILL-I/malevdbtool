@@ -23,18 +23,16 @@ public class ExcelLoaderServlet {
     public String doPost(Model model, @RequestParam MultipartFile file,  RedirectAttributes attributes) {
         if (file.isEmpty()) {
             Logger.log(this, "File is empty", 3);
-            attributes.addAttribute("error", "File is empty");
+            ServletUtils.showPopup(attributes, "File is empty", "error");
             return "redirect:/load";
         }
         ExcelParser excelParser = new ExcelParser();
         try {
-            //File tmpFile = FileResourcesUtils.transferMultipartFile(file, session.getServletContext().getRealPath("/") + "/temp/excelData.tmp");
             File tmpFile = FileResourcesUtils.transferMultipartFile(file, FileResourcesUtils.RESOURCE_PATH + "temp/excelData.tmp");
-            //executor.executeUpdate(excelParser.prepareStatement("people", executor.loadSQLResource("insert_people.sql"), excelParser.read(tmpFile), 0));
             model.addAttribute("table", excelParser.getTable(excelParser.read(tmpFile), file.getOriginalFilename()));
         } catch (Exception e) {
             Logger.log(this, e.getMessage(), 3);
-            attributes.addAttribute("error", e.getLocalizedMessage());
+            ServletUtils.showPopup(attributes, e.getLocalizedMessage(), "error");
             return "redirect:/load";
         }
         return "/views/previewExcel";

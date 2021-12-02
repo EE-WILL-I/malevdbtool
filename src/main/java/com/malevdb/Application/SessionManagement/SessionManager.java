@@ -2,6 +2,7 @@ package com.malevdb.Application.SessionManagement;
 
 import com.malevdb.Application.Logging.Logger;
 import com.malevdb.Database.SQLExecutor;
+import com.malevdb.Localization.LocalizationManager;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -14,8 +15,10 @@ public class SessionManager {
 
     public static boolean checkSession(HttpServletRequest request) {
         Logger.log(SessionManager.class, "Checking user session", 4);
-        if(request.getSession().getAttribute("authorized") != null)
+        if(request.getSession().getAttribute("authorized") != null) {
+            LocalizationManager.setUserLocale(request.getSession());
             return true;
+        }
         String ip = request.getRemoteAddr();
         if(ip == null || ip.isEmpty())
             ip = request.getHeader("X-FORWARDED-FOR");
@@ -50,14 +53,17 @@ public class SessionManager {
             ip = request.getHeader("X-FORWARDED-FOR");
         UserSession usrSess = new UserSession(id, userId);
         request.getSession().setAttribute("user_session", usrSess);
+        try {
         deregisterSession(request);
-        //sqlExecutor.executeCall(sqlExecutor.loadSQLResource("clean_timeout_sessions.sql"));
-        sqlExecutor.executeInsert(sqlExecutor.loadSQLResource("insert_active_user_sessions.sql"),
-                "active_user_sessions", id, userId, null, ip);
+            sqlExecutor.executeInsert(sqlExecutor.loadSQLResource("insert_active_user_sessions.sql"),
+                    "active_user_sessions", id, userId, null, ip);
+        } catch (SQLException e) {
+            Logger.log(SessionManager.class, "Can't register session", 2);
+        }
         return usrSess;
     }
 
-    public static void deregisterSession(HttpServletRequest request) {
+    public static void deregisterSession(HttpServletRequest request) throws SQLException {
         String ip = request.getRemoteAddr();
         if (ip == null || ip.isEmpty())
             ip = request.getHeader("X-FORWARDED-FOR");

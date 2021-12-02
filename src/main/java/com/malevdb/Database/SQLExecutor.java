@@ -87,26 +87,21 @@ public class SQLExecutor {
             resultSet = statement.executeQuery();
             logAfterExecution(true);
         } catch (SQLException e) {
-            e.printStackTrace();
+            Logger.log(SQLExecutor.class, e.getMessage(), 2);
             logAfterExecution(false);
             return null;
         }
         return resultSet;
     }
 
-    public boolean executeUpdate(String query, String... args) {
+    public boolean executeUpdate(String query, String... args) throws SQLException {
         if(!validateQuery(query))
             return false;
-        try {
             PreparedStatement statement = prepareStatement(query, args);
             return executeUpdate(statement);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 
-    public boolean executeUpdate(PreparedStatement statement, String... args) {
+    public boolean executeUpdate(PreparedStatement statement, String... args) throws SQLException {
         try {
             if(args.length > 0)
                 statement = prepareStatement(statement.toString(), args);
@@ -116,13 +111,13 @@ public class SQLExecutor {
             logAfterExecution(true);
         } catch (SQLException e) {
             logAfterExecution(false);
-            e.printStackTrace();
-            return false;
+            Logger.log(SQLExecutor.class, e.getMessage(), 2);
+            throw e;
         }
         return true;
     }
 
-    public boolean executeInsert(String query, String table, String... args) {
+    public boolean executeInsert(String query, String table, String... args) throws SQLException {
         InsertQueryBuilder queryBuilder = new InsertQueryBuilder(table, query);
         queryBuilder.addRow(args);
         PreparedStatement statement = queryBuilder.getStatement();

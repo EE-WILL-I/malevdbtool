@@ -1,3 +1,4 @@
+<%@ page import="com.malevdb.Localization.LocalizationManager" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -6,6 +7,7 @@
 </head>
 <body onload="init()">
 <jsp:include page="../elements/header.jsp"/>
+<jsp:include page="../elements/popup.jsp"/>
 <div class="content_holder" style="width: 90%; align-content: stretch">
     <form id="form" action="${pageContext.request.contextPath}/data/insert" method="post">
         <div>
@@ -18,7 +20,7 @@
 </body>
 <script>
     function submitCells() {
-        var save = window.confirm("Submit new data?");
+        var save = window.confirm("<%=LocalizationManager.getString("previewExcel.submit")%>");
         if (!save) {
             document.getElementById("selected_table").value = "none";
         }

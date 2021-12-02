@@ -22,8 +22,6 @@ public class FileResourcesUtils {
             throw new IllegalArgumentException("Path is empty");
 
         Path path = Paths.get(RESOURCE_PATH + filePath);
-        if (classLoader == null)
-            classLoader = FileResourcesUtils.class.getClassLoader();
         stringBuilder = new StringBuilder();
         Stream<String> lines = Files.lines(path, StandardCharsets.UTF_8);
         lines.forEach(line -> stringBuilder.append(line));
@@ -51,4 +49,9 @@ public class FileResourcesUtils {
         }
         else throw new IOException("Cannot transfer file");
     }
+
+    public static ClassLoader getClassLoader() {
+        if (classLoader == null)
+            classLoader = FileResourcesUtils.class.getClassLoader();
+        return classLoader; }
 }

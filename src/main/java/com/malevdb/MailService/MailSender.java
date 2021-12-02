@@ -38,13 +38,13 @@ public class MailSender {
         return mailServiceContext.getBean(MailSender.class);
     }
 
-    public void sendMessage(String content, String subject, String... recipients) {
+    public void sendMessage(String content, String subject, String... recipients) throws MessagingException {
         addRecipients(recipients);
         MimeMessage message = prepareMessage(content, subject);
         sendMessage(message);
     }
 
-    public void sendMessage(MimeMessage message) {
+    public void sendMessage(MimeMessage message) throws MessagingException {
         Logger.log(MailSender.class, "Sending message...", 4);
         send(message);
 
@@ -63,8 +63,7 @@ public class MailSender {
         try {
             recipients.add(new InternetAddress(address));
         } catch (AddressException e) {
-            Logger.log(MailSender.class, "Cannot add recipient " + address, 2);
-            e.printStackTrace();
+            Logger.log(MailSender.class, "Cannot add recipient " + address + ": " + e.getMessage(), 2);
         }
     }
 
@@ -87,12 +86,12 @@ public class MailSender {
         return recipients;
     }
 
-    private void send(MimeMessage message) {
+    private void send(MimeMessage message) throws MessagingException {
         try {
             Transport.send(message);
         } catch (MessagingException e) {
-            Logger.log(MailSender.class, "Cannot send message", 2);
-            e.printStackTrace();
+            Logger.log(MailSender.class, "Cannot send message: " + e.getMessage(), 2);
+            throw e;
         }
     }
 }

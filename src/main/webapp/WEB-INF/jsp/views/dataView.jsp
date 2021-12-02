@@ -1,6 +1,7 @@
 <%@ page import="com.malevdb.Utils.PropertyType" %>
 <%@ page import="com.malevdb.Utils.PropertyReader" %>
 <%@ page import="com.malevdb.Database.DataTable" %>
+<%@ page import="com.malevdb.Localization.LocalizationManager" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%DataTable table = (DataTable) pageContext.getRequest().getAttribute("table");%>
 <html>
@@ -13,18 +14,19 @@
 </head>
 <body onload="init()">
 <jsp:include page="../elements/header.jsp"/>
+<jsp:include page="../elements/popup.jsp"/>
 <div class="content_holder">
     <form id="form" action="${pageContext.request.contextPath}/data" method="GET">
         <div>
-            <h3>Select a table</h3>
+            <h3><%=LocalizationManager.getString("dataView.select_a_table")%></h3>
             <jsp:include page="../elements/tableSelect.jsp"/>
-            <button type="button" onclick="loadTable()">Load selected table</button>
+            <button type="button" onclick="loadTable()"><%=LocalizationManager.getString("dataView.load_table")%></button>
         </div>
         <div>
             <jsp:include page="../elements/interactiveTable.jsp"/>
         </div>
     </form>
-    <div id="dialog" title="Create new user" style="display:none;">
+    <div id="dialog" title="Add new data" style="display:none;">
         <form id="insert_form" action="/data/insert/json/<%=table.getName()%>" method="post">
             <input type="hidden" name="new_data" id="new_data">
             <fieldset id="field_set">
@@ -37,7 +39,7 @@
             </fieldset>
         </form>
     </div>
-    <button onclick='addData()'>Add row</button>
+    <button onclick='addData()'><%=LocalizationManager.getString("dataView.add_row")%></button>
 </div>
 <jsp:include page="../elements/footer.jsp" />
 </body>

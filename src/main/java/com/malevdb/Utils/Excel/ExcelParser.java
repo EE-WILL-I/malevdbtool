@@ -1,5 +1,6 @@
 package com.malevdb.Utils.Excel;
 
+import com.malevdb.Application.Logging.Logger;
 import com.malevdb.Database.DataTable;
 import com.malevdb.Database.DatabaseConnector;
 import com.malevdb.Database.InsertQueryBuilder;
@@ -26,8 +27,8 @@ public class ExcelParser {
             try {
                 myWorkBook = new XSSFWorkbook(myInput);
             } catch (Exception e) {
-                e.printStackTrace();
-                throw new FileNotFoundException("Can't load file");
+                Logger.log(ExcelParser.class, e.getMessage(), 2);
+                throw new FileNotFoundException("Can't load file: " + e.getLocalizedMessage());
             } finally {
                 file.delete();
                 myInput.close();
@@ -50,8 +51,8 @@ public class ExcelParser {
                 cellVectorHolder.addElement(list);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new FileNotFoundException("Can't load file");
+            Logger.log(ExcelParser.class, e.getMessage(), 2);
+            throw new FileNotFoundException("Error during file reading: " + e.getLocalizedMessage());
         } finally {
             file.delete();
         }

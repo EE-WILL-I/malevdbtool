@@ -1,5 +1,6 @@
 <%@ page import="com.malevdb.Utils.PropertyReader" %>
 <%@ page import="com.malevdb.Database.DataTable" %>
+<%@ page import="com.malevdb.Localization.LocalizationManager" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <% DataTable table = (DataTable) pageContext.getRequest().getAttribute("table"); %>
 <script>
@@ -29,10 +30,10 @@
     function saveUpdatedCells(table) {
         var data = sessionStorage.getItem("data").toString();
         if (data === "[]") {
-            alert("No data has been updated.");
+            alert("<%=LocalizationManager.getString("intTable.no_data_updated")%>");
         } else {
             const form = document.getElementById("form");
-            var save = window.confirm("Save changes?\n" + data);
+            var save = window.confirm("<%=LocalizationManager.getString("intTable.save")%>\n" + data);
             if (save) {
                 document.getElementById("updated_values").value = data;
                 form.setAttribute("method", "POST");
@@ -43,7 +44,7 @@
     }
 
     function deleteRow(id, col, table) {
-        var del = window.confirm("Delete row with ID: " + id + "?");
+        var del = window.confirm("<%=LocalizationManager.getString("intTable.delete")%>" + id + "?");
         if (del) {
             const form = document.getElementById("form");
             form.setAttribute("method", "POST");
@@ -79,10 +80,12 @@
                 <%}%>
                 <td style="width: 10px;">
                     <button class="delete_btn" value="delete" type="button"
-                            onclick="deleteRow('<%=id%>','<%=table.getColumn(0)%>','<%=table.getName()%>')">X</button>
+                            onclick="deleteRow('<%=id%>','<%=table.getColumn(0)%>','<%=table.getName()%>')">x</button>
                 </td>
             </tr>
             <%}%>
         </table>
-    <button id="submitBtn" type="button" onclick="saveUpdatedCells('<%=table.getName()%>')">submit</button>
+    <button id="submitBtn" type="button" onclick="saveUpdatedCells('<%=table.getName()%>')">
+        <%=LocalizationManager.getString("intTable.submit")%>
+    </button>
 </div>
