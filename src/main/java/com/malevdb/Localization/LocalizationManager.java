@@ -30,7 +30,7 @@ public class LocalizationManager {
         } catch (NullPointerException e) {
             Logger.log(ServletUtils.class, "User's locale not found", 3);
             bundle = ResourceBundle.getBundle("resourceBundles." + BUNDLE_BASE_NAME,
-                    new Locale("en", "US"), FileResourcesUtils.getClassLoader(), utf8Control);
+                    new Locale("ru", "RU"), FileResourcesUtils.getClassLoader(), utf8Control);
         }
     }
 
