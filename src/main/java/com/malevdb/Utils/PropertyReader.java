@@ -1,6 +1,7 @@
 package com.malevdb.Utils;
 
 import com.malevdb.Application.Logging.Logger;
+import com.malevdb.Database.DatabaseConnector;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -21,8 +22,13 @@ public class PropertyReader {
             Logger.log(PropertyReader.class, "Cannot load key: " + key, 2);
             return "";
         }
-        Logger.log(PropertyReader.class, "Key loaded: " + key, 4);
-        return PROPERTIES.getProperty(key);
+        String value = PROPERTIES.getProperty(key);
+        if(value != null) {
+            Logger.log(PropertyReader.class, "Key loaded: " + key, 4);
+            return value;
+        }
+        Logger.log(PropertyReader.class, "Key not present: " + key, 4);
+        return "";
     }
 
     public static Properties getProperties(PropertyType property) {
@@ -45,15 +51,15 @@ public class PropertyReader {
     }
 
     public static Properties loadServerProps() {
-            PROPERTIES = loadProperty(FileResourcesUtils.RESOURCE_PATH + PropertyType.APPLICATION.toString().toLowerCase(Locale.ROOT) + FILE_POSTFIX);
-            PROPERTIES_MAP.put("application", PROPERTIES);
-            PROPERTIES = loadProperty(PROPERTIES_PATH + PropertyType.SERVER.toString().toLowerCase(Locale.ROOT) + FILE_POSTFIX);
-            Logger.loggingLevel = Byte.parseByte(PROPERTIES.getProperty("app.loggingLevel"));
-            return PROPERTIES;
-    }
-
-    public static String getStyle(String key) {
-        return getPropertyValue(PropertyType.STYLE, key);
+        PROPERTIES = loadProperty(FileResourcesUtils.RESOURCE_PATH + PropertyType.APPLICATION.toString().toLowerCase(Locale.ROOT) + FILE_POSTFIX);
+        PROPERTIES_MAP.put("application", PROPERTIES);
+        PROPERTIES = loadProperty(PROPERTIES_PATH + PropertyType.SERVER.toString().toLowerCase(Locale.ROOT) + FILE_POSTFIX);
+        Logger.loggingLevel = Byte.parseByte(PROPERTIES.getProperty("app.loggingLevel"));
+        if (getPropertyValue(PropertyType.SERVER, "app.disableSecurity").toLowerCase(Locale.ROOT).equals("true"))
+            System.out.println("WARNING! Security system is disabled. See property \"app.disableSecurity\"");
+        if (getPropertyValue(PropertyType.SERVER, "app.disableDatabase").toLowerCase(Locale.ROOT).equals("true"))
+            Logger.log(DatabaseConnector.class, "DB connection disabled. See property \"app.disableDatabase\"", 3);
+        return PROPERTIES;
     }
 
     public static Properties loadProperty(String path) {

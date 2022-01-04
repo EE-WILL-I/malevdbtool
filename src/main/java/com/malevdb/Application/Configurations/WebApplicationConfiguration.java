@@ -8,7 +8,7 @@ import org.springframework.context.support.SimpleThreadScope;
 @Configuration
 public class WebApplicationConfiguration {
     @Bean
-    public CustomScopeConfigurer customScopeConfigurer() {
+    public static CustomScopeConfigurer customScopeConfigurer() {
         CustomScopeConfigurer configurer = new CustomScopeConfigurer();
         configurer.addScope("session", new SimpleThreadScope());
         return configurer;

@@ -3,6 +3,8 @@ package com.malevdb.Database;
 import com.malevdb.Application.Logging.Logger;
 import com.malevdb.SpringConfigurations.SQLExecutorConfiguration;
 import com.malevdb.Utils.FileResourcesUtils;
+import com.malevdb.Utils.PropertyReader;
+import com.malevdb.Utils.PropertyType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -10,9 +12,11 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 
 public class SQLExecutor {
     public final String SQL_RESOURCE_PATH;
+    public static boolean useDummy = false;
     private final Connection connection;
     private static AnnotationConfigApplicationContext sqlExecutorContext;
     private String lastLoadedResource;
@@ -22,11 +26,14 @@ public class SQLExecutor {
     public SQLExecutor(Connection connection, String sqlPath) {
         this.connection = connection;
         SQL_RESOURCE_PATH = sqlPath;
+        useDummy = PropertyReader.getPropertyValue(PropertyType.DATABASE, "sql.useDummyExecutor").toLowerCase(Locale.ROOT).equals("true");
     }
 
     public static SQLExecutor getInstance() {
+        if(useDummy)
+            return SQLExecutorDummy.getInstance();
         if(sqlExecutorContext == null)
-            sqlExecutorContext  = new AnnotationConfigApplicationContext(SQLExecutorConfiguration.class);
+            sqlExecutorContext = new AnnotationConfigApplicationContext(SQLExecutorConfiguration.class);
         return sqlExecutorContext.getBean(SQLExecutor.class);
     }
 

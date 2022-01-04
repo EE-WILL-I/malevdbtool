@@ -21,6 +21,7 @@ import java.util.*;
 
 @Controller
 public class DataServlet {
+    private static final String defaultTable = "people";
     @GetMapping("/data")
     public String doGetDef(@ModelAttribute(name = "show_popup") String showPopup,
                            @ModelAttribute(name = "popup_message") String popupMessage,
@@ -33,13 +34,16 @@ public class DataServlet {
     @GetMapping("data/{tableName}")
     public String doGet(Model model, @PathVariable(value = "tableName") String tableName, RedirectAttributes attributes) {
         if(tableName.isEmpty() || tableName.equals("none")) {
-            return "redirect:/data/people";
+            return "redirect:/data/"+defaultTable;
         }
         if(loadTable(model, tableName)) {
             return "views/dataView";
+        } else if(tableName.equals(defaultTable)) {
+            ServletUtils.showPopup(attributes, "Can't load page because unable to fetch data from the database. Check connection status.", "error");
+            return "redirect:/";
         } else {
             ServletUtils.showPopup(attributes, "Can't load table " + tableName, "error");
-            return "redirect:/data/people";
+            return "redirect:/data/"+defaultTable;
         }
     }
 

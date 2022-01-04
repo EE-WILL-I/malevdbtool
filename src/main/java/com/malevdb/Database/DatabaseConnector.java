@@ -3,6 +3,7 @@ import com.malevdb.Application.Logging.Logger;
 import com.malevdb.Utils.*;
 
 import java.sql.*;
+import java.util.Locale;
 
 public class DatabaseConnector {
     /**
@@ -22,9 +23,11 @@ public class DatabaseConnector {
     private static final String PASSWORD = PropertyReader.getPropertyValue(PropertyType.DATABASE, "datasource.password");
 
     public static boolean setConnection(String... args) throws ClassNotFoundException, SQLException {
-        Logger.log(DatabaseConnector.class,"Registering JDBC driver", 1);
+        if (PropertyReader.getPropertyValue(PropertyType.SERVER, "app.disableDatabase").toLowerCase(Locale.ROOT).equals("true"))
+            return true;
+        Logger.log(DatabaseConnector.class, "Registering JDBC driver", 1);
         Class.forName(JDBC_DRIVER);
-        Logger.log(DatabaseConnector.class,"Creating database connection", 1);
+        Logger.log(DatabaseConnector.class, "Creating database connection", 1);
 
         try {
             if (args.length == 3)
@@ -32,7 +35,7 @@ public class DatabaseConnector {
             else
                 connection = DriverManager.getConnection(DATABASE_URL + DATABASE_SCHEMA + CONNECTION_ARGS, USER, PASSWORD);
         } catch (SQLException e) {
-            Logger.log(DatabaseConnector.class,"Unable connect to database", 2);
+            Logger.log(DatabaseConnector.class, "Unable connect to database", 2);
             e.printStackTrace();
             return false;
         }
