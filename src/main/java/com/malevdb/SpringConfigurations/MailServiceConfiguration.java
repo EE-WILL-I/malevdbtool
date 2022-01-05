@@ -1,8 +1,8 @@
 package com.malevdb.SpringConfigurations;
 
+import Utils.Properties.PropertyReader;
+import Utils.Properties.PropertyType;
 import com.malevdb.MailService.MailSender;
-import com.malevdb.Utils.PropertyReader;
-import com.malevdb.Utils.PropertyType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;

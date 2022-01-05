@@ -1,13 +1,12 @@
 package com.malevdb.Application.Servlets;
 
-import com.malevdb.Application.Logging.Logger;
+import Utils.Logging.Logger;
 import com.malevdb.Database.DataTable;
-import com.malevdb.Database.InsertQueryBuilder;
-import com.malevdb.Database.SQLExecutor;
+import com.malevtool.Proccessing.SQLExecutor;
+import com.malevtool.SQL.InsertQueryBuilder;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

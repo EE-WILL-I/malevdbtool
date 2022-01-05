@@ -1,8 +1,9 @@
 package com.malevdb.Application.Servlets;
 
-import com.malevdb.Application.Logging.Logger;
+import Utils.FileResourcesUtils;
+import Utils.Logging.Logger;
 import com.malevdb.Utils.Excel.ExcelParser;
-import com.malevdb.Utils.FileResourcesUtils;
+import com.malevdb.Utils.ExtendedResourcesUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class ExcelLoaderServlet {
         }
         ExcelParser excelParser = new ExcelParser();
         try {
-            File tmpFile = FileResourcesUtils.transferMultipartFile(file, FileResourcesUtils.RESOURCE_PATH + "temp/excelData.tmp");
+            File tmpFile = ExtendedResourcesUtils.transferMultipartFile(file, FileResourcesUtils.RESOURCE_PATH + "temp/excelData.tmp");
             model.addAttribute("table", excelParser.getTable(excelParser.read(tmpFile), file.getOriginalFilename()));
         } catch (Exception e) {
             Logger.log(this, e.getMessage(), 3);

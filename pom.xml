@@ -84,6 +84,11 @@
             <version>2.5.6</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>5.2.15.RELEASE</version>
+        </dependency>
         <!--Servlet-->
         <!--<dependency>
             <groupId>jakarta.servlet</groupId>
@@ -133,5 +138,23 @@
             <artifactId>json-simple</artifactId>
             <version>1.1.1</version>
         </dependency>
+        <!--Custom utils and logger-->
+        <dependency>
+            <groupId>com.malevtools</groupId>
+            <artifactId>FilesAndResourcesUtils</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <!--DCS-->
+        <dependency>
+            <groupId>com.malevtools</groupId>
+            <artifactId>DatabaseConnectivityService</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
+    <repositories>
+        <repository>
+            <id>custom-repo</id>
+            <url>https://sanctorum.jfrog.io/artifactory/dev-remote-libs-snapshot/</url>
+        </repository>
+    </repositories>
 </project>

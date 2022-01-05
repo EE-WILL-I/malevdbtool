@@ -16,5 +16,15 @@
       <option name="name" value="JBoss Community repository" />
       <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="custom-repo" />
+      <option name="name" value="custom-repo" />
+      <option name="url" value="https://sanctorum.jfrog.io/artifactory/dev-remote-libs-snapshot/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="custom-remote-repo" />
+      <option name="name" value="custom-remote-repo" />
+      <option name="url" value="https://sanctorum.jfrog.io/artifactory/dev-remote-libs-snapshot/" />
+    </remote-repository>
   </component>
 </project>

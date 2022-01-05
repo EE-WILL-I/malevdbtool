@@ -1,7 +1,5 @@
-<%@ page import="com.malevdb.Database.SQLExecutor" %>
+<%@ page import="com.malevtool.Processing.SQLExecutor" %>
 <%@ page import="java.sql.ResultSet" %>
-<%@ page import="com.malevdb.Utils.PropertyReader" %>
-<%@ page import="com.malevdb.Utils.PropertyType" %>
 <%@ page import="com.malevdb.Database.DataTable" %>
 <%@ page import="java.sql.SQLException" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>

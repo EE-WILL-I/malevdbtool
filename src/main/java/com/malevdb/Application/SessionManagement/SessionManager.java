@@ -1,8 +1,8 @@
 package com.malevdb.Application.SessionManagement;
 
-import com.malevdb.Application.Logging.Logger;
-import com.malevdb.Database.SQLExecutor;
+import Utils.Logging.Logger;
 import com.malevdb.Localization.LocalizationManager;
+import com.malevtool.Proccessing.SQLExecutor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

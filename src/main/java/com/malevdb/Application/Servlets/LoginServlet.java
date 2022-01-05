@@ -1,10 +1,10 @@
 package com.malevdb.Application.Servlets;
-import com.malevdb.Application.Logging.Logger;
+import Utils.Logging.Logger;
 import com.malevdb.Application.SessionManagement.SessionManager;
 import com.malevdb.Application.SessionManagement.UserSession;
-import com.malevdb.Database.SQLExecutor;
 
 import com.malevdb.Localization.LocalizationManager;
+import com.malevtool.Proccessing.SQLExecutor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

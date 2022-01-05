@@ -1,7 +1,5 @@
 package com.malevdb.Application.Servlets;
 
-import com.malevdb.Application.Logging.Logger;
-import com.malevdb.Utils.FileResourcesUtils;
 import com.malevdb.Localization.UTF8Control;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;

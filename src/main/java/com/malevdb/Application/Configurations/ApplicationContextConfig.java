@@ -1,8 +1,7 @@
 package com.malevdb.Application.Configurations;
 
-import com.malevdb.Utils.FileResourcesUtils;
-import com.malevdb.Utils.PropertyReader;
-import com.malevdb.Utils.PropertyType;
+import Utils.Properties.PropertyReader;
+import Utils.Properties.PropertyType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +10,6 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import java.util.Properties;
 
 @Configuration
-
 @ComponentScan("com.malevdb.Application.*")
 public class ApplicationContextConfig {
 

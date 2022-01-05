@@ -1,10 +1,9 @@
 package com.malevdb.Utils.Excel;
 
-import com.malevdb.Application.Logging.Logger;
+import Utils.FileResourcesUtils;
+import Utils.Logging.Logger;
 import com.malevdb.Database.DataTable;
-import com.malevdb.Database.DatabaseConnector;
-import com.malevdb.Database.InsertQueryBuilder;
-import com.malevdb.Utils.FileResourcesUtils;
+import com.malevtool.SQL.InsertQueryBuilder;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFCell;

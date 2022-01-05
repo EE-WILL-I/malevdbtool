@@ -1,6 +1,7 @@
 package com.malevdb.Application;
 
-import com.malevdb.Database.DatabaseConnector;
+
+import com.malevtool.Connection.DatabaseConnector;
 
 import javax.annotation.PreDestroy;
 

@@ -1,4 +1,3 @@
-<%@ page import="com.malevdb.Utils.PropertyReader" %>
 <%@ page import="com.malevdb.Database.DataTable" %>
 <%@ page import="com.malevdb.Localization.LocalizationManager" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>

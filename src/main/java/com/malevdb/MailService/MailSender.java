@@ -1,6 +1,6 @@
 package com.malevdb.MailService;
 
-import com.malevdb.Application.Logging.Logger;
+import Utils.Logging.Logger;
 import com.malevdb.SpringConfigurations.MailServiceConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;

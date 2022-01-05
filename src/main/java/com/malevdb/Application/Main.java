@@ -1,14 +1,11 @@
 package com.malevdb.Application;
 
-import com.malevdb.Application.Logging.Logger;
+import Utils.FileResourcesUtils;
+import Utils.Logging.Logger;
+import Utils.Properties.PropertyReader;
 import com.malevdb.Application.Servlets.SecurityHandlerInterceptor;
-import com.malevdb.Database.DatabaseConnector;
-import com.malevdb.Utils.FileResourcesUtils;
-import com.malevdb.Utils.PropertyReader;
-import com.malevdb.Utils.PropertyType;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.malevtool.Connection.DatabaseConnector;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,16 +14,12 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.net.URLDecoder;
-import java.util.Arrays;
 
 @SpringBootApplication
 public class Main {

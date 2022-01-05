@@ -1,8 +1,8 @@
 package com.malevdb.Application.Servlets;
 
+import Utils.Properties.PropertyReader;
+import Utils.Properties.PropertyType;
 import com.malevdb.Application.SessionManagement.SessionManager;
-import com.malevdb.Utils.PropertyReader;
-import com.malevdb.Utils.PropertyType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;

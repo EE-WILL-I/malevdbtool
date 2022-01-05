@@ -1,10 +1,10 @@
 package com.malevdb.Localization;
 
-import com.malevdb.Application.Logging.Logger;
+import Utils.FileResourcesUtils;
+import Utils.Logging.Logger;
+import Utils.Properties.PropertyReader;
+import Utils.Properties.PropertyType;
 import com.malevdb.Application.Servlets.ServletUtils;
-import com.malevdb.Utils.FileResourcesUtils;
-import com.malevdb.Utils.PropertyReader;
-import com.malevdb.Utils.PropertyType;
 
 import javax.servlet.http.HttpSession;
 import java.util.Locale;
