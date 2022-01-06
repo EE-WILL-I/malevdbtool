@@ -142,7 +142,7 @@
         <dependency>
             <groupId>com.malevtools</groupId>
             <artifactId>FilesAndResourcesUtils</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.1</version>
         </dependency>
         <!--DCS-->
         <dependency>
@@ -155,6 +155,10 @@
         <repository>
             <id>custom-repo</id>
             <url>https://sanctorum.jfrog.io/artifactory/dev-remote-libs-snapshot/</url>
+        </repository>
+        <repository>
+            <id>custom-release-repo</id>
+            <url>https://sanctorum.jfrog.io/artifactory/dev-remote-libs-release/</url>
         </repository>
     </repositories>
 </project>

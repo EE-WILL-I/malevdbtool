@@ -1,4 +1,4 @@
-package com.malevdb.Application.Servlets;
+package com.malevdb.Application.Security;
 
 import Utils.Properties.PropertyReader;
 import Utils.Properties.PropertyType;

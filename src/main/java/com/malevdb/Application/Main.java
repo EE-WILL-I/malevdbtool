@@ -3,14 +3,15 @@ package com.malevdb.Application;
 import Utils.FileResourcesUtils;
 import Utils.Logging.Logger;
 import Utils.Properties.PropertyReader;
-import com.malevdb.Application.Servlets.SecurityHandlerInterceptor;
+import com.malevdb.Application.Security.SecurityHandlerInterceptor;
+import com.malevdb.MailService.MNSAuthenticator;
 import com.malevtool.Connection.DatabaseConnector;
+import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -41,6 +42,11 @@ public class Main {
     }
 
     public static void main(String[] args) throws Exception {
+        init();
+        start(args);
+    }
+
+    private static void init() {
         System.out.println("Loading server properties");
         String resPath = "";
         try {
@@ -56,12 +62,17 @@ public class Main {
         }
         FileResourcesUtils.RESOURCE_PATH = resPath;
         PropertyReader.loadServerProps();
-        Logger.log(Main.class, "Starting the server...");
-        //entry point
-        //SpringApplication.run(Main.class, args);
+        MNSAuthenticator.loadProvidedUserCredentials();
+    }
+
+    private static void start(String[] args) throws Exception {
+        StringBuilder argsStr = new StringBuilder();
+        for(String arg : args)
+            argsStr.append(arg);
+        Logger.log(Main.class, "Starting the server with args: " + argsStr, 1);
         ctx = new SpringApplicationBuilder(Main.class).web(WebApplicationType.SERVLET).run(args);
         ctx.getBean(TerminateBean.class);
-        System.out.println("Spring application started");
+        Logger.log(Main.class,"Spring application started", 1);
         //connect to DB
         try {
             DatabaseConnector.setConnection(args);
@@ -72,16 +83,37 @@ public class Main {
     }
 
     public static void stop() throws Exception {
-        System.out.println("Stopping application..");
-        DatabaseConnector.closeConnection();
+        Logger.log(Main.class, "Stopping application..", 1);
+        try {
+            DatabaseConnector.closeConnection();
+        } catch (Exception e) { Logger.log(Main.class,"Can't close DB connection", 2); }
         ctx.close();
         SpringApplication.exit(ctx, () -> 0);
+    }
+
+    public static void restart(String [] args) throws Exception {
+        try {
+            DatabaseConnector.closeConnection();
+        } catch (Exception e) { Logger.log(Main.class,"Can't close DB connection", 2); }
+
+        Thread thread = new Thread(() -> {
+            ctx.close();
+            init();
+            try {
+                start(args);
+            } catch (Exception e) {
+                System.out.println("Restarting server ended up with an error. " + e.getMessage());
+            }
+        });
+
+        thread.setDaemon(false);
+        thread.start();
     }
 
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
         return args -> {
-            System.out.println("Starting from command line");
+            Logger.log(Main.class, "Starting from command line", 1);
         };
     }
 }

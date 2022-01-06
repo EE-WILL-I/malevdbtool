@@ -141,7 +141,7 @@
     <orderEntry type="library" name="Maven: javax.mail:mail:1.5.0-b01" level="project" />
     <orderEntry type="library" name="Maven: javax.activation:activation:1.1" level="project" />
     <orderEntry type="library" name="Maven: com.googlecode.json-simple:json-simple:1.1.1" level="project" />
-    <orderEntry type="library" name="Maven: com.malevtools:FilesAndResourcesUtils:1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.malevtools:FilesAndResourcesUtils:1.1" level="project" />
     <orderEntry type="library" name="Maven: com.malevtools:DatabaseConnectivityService:1.0-SNAPSHOT" level="project" />
   </component>
 </module>

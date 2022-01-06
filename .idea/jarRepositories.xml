@@ -22,6 +22,11 @@
       <option name="url" value="https://sanctorum.jfrog.io/artifactory/dev-remote-libs-snapshot/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="custom-release-repo" />
+      <option name="name" value="custom-release-repo" />
+      <option name="url" value="https://sanctorum.jfrog.io/artifactory/dev-remote-libs-release/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="custom-remote-repo" />
       <option name="name" value="custom-remote-repo" />
       <option name="url" value="https://sanctorum.jfrog.io/artifactory/dev-remote-libs-snapshot/" />
