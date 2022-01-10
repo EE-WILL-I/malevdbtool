@@ -40,7 +40,7 @@ public class LoginServlet {
                 Logger.log(this, "Login successful", 3);
                 return "redirect:/";
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             Logger.log(this, e.getMessage(), 2);
             ServletUtils.showPopup(attributes, e.getLocalizedMessage(), "error");
         }

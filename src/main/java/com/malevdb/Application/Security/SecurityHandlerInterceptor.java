@@ -1,5 +1,6 @@
 package com.malevdb.Application.Security;
 
+import Utils.Logging.Logger;
 import Utils.Properties.PropertyReader;
 import Utils.Properties.PropertyType;
 import com.malevdb.Application.SessionManagement.SessionManager;
@@ -21,6 +22,13 @@ public class SecurityHandlerInterceptor extends HandlerInterceptorAdapter {
             return true;
         if (SessionManager.checkSession(request))
             return true;
+        String auth = request.getHeader("Authorization");
+        if(auth != null && !auth.isEmpty()) {
+            String credentials = auth.substring(6);
+            if (AuthorizationManager.authorize(credentials))
+                return true;
+        }
+        Logger.log(this, "Access denied for unauthorized user. IP:" + request.getRemoteAddr(), 2);
         response.sendRedirect("/login");
         return false;
     }

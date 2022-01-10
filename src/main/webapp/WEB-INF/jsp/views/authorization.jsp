@@ -1,5 +1,7 @@
 <%@ page import="com.malevdb.Application.SessionManagement.SessionManager" %>
 <%@ page import="com.malevdb.Localization.LocalizationManager" %>
+<%@ page import="Utils.Properties.PropertyReader" %>
+<%@ page import="Utils.Properties.PropertyType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%--style init--%>
 <% String style_header = PropertyReader.getPropertyValue(PropertyType.STYLE, "shared.header"); %>
@@ -14,7 +16,7 @@
 <div style="width: fit-content; margin-left: auto; margin-right: auto;">
     <jsp:include page="../elements/popup.jsp"/>
     <%if(!SessionManager.checkSession(request)) {%>
-        <form action="login" method="post" style="<%=style_form%>">
+        <form action="/login" method="post" style="<%=style_form%>">
             <div style="<%=background_color%> width: 300px;">
                 <h2 style="<%=style_header%>">Authorization</h2>
                 <ul>

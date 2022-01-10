@@ -1,12 +1,21 @@
 package com.malevdb.Application.Servlets;
 
+import Utils.JSON.JSONBuilder;
 import Utils.Logging.Logger;
+import Utils.Properties.PropertyReader;
+import Utils.Properties.PropertyType;
+import com.malevdb.Application.Security.AuthorizationManager;
+import com.malevdb.Application.SessionManagement.SessionManager;
 import com.malevdb.Database.DataTable;
+import com.malevdb.MailService.MNSAuthenticator;
 import com.malevtool.Proccessing.SQLExecutor;
 import com.malevtool.SQL.InsertQueryBuilder;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +28,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 @Controller
-public class DataServlet {
+public class DatabaseServlet {
     private static final String defaultTable = "people";
     @GetMapping("/data")
     public String doGetDef(@ModelAttribute(name = "show_popup") String showPopup,
@@ -30,8 +39,13 @@ public class DataServlet {
         return "redirect:/data/people";
     }
 
-    @GetMapping("data/{tableName}")
-    public String doGet(Model model, @PathVariable(value = "tableName") String tableName, RedirectAttributes attributes) {
+    @GetMapping("/data/{tableName}")
+    public String doGet(HttpServletRequest request, Model model, @PathVariable(value = "tableName") String tableName,
+                        RedirectAttributes attributes) {
+        String tables
+                = new RestTemplate().exchange(request.getRequestURL().toString().replaceAll(tableName, "tables"),
+                HttpMethod.GET, new HttpEntity<String>(AuthorizationManager.getHeaders()), String.class).getBody();
+        model.addAttribute("tables", tables);
         if(tableName.isEmpty() || tableName.equals("none")) {
             return "redirect:/data/"+defaultTable;
         }
@@ -43,6 +57,26 @@ public class DataServlet {
         } else {
             ServletUtils.showPopup(attributes, "Can't load table " + tableName, "error");
             return "redirect:/data/"+defaultTable;
+        }
+    }
+
+    @GetMapping("/data/query")
+    public String getDefaultQuery() {
+        return "redirect:/data/query/get_stipend_candidats.sql?args=*";
+    }
+
+    @GetMapping("data/query/{script}")
+    public String getQuery(@PathVariable String script,
+                           @RequestParam(required = false) String[] args,
+                           Model model, RedirectAttributes attributes) {
+        if(script.isEmpty()) {
+            return "redirect:/data/"+defaultTable;
+        }
+        if(executeQuery(model, script, args)) {
+            return "views/queryView";
+        } else {
+            ServletUtils.showPopup(attributes, "Can't execute query " + script, "error");
+            return "redirect:/query/"+defaultTable;
         }
     }
 
@@ -153,6 +187,21 @@ public class DataServlet {
         try {
         ResultSet resultSet = executor.executeSelect(executor.loadSQLResource("select_any.sql"),
                 "*", tableName);
+            DataTable table = new DataTable(resultSet.getMetaData().getTableName(1));
+            table.populateTable(resultSet);
+            resultSet.close();
+            model.addAttribute("table", table);
+            return true;
+        } catch (Exception e) {
+            Logger.log(this, "Error during parsing data from DB: " + e.getMessage(), 2);
+            return false;
+        }
+    }
+
+    private boolean executeQuery(Model model, String script, String... args) {
+        SQLExecutor executor = SQLExecutor.getInstance();
+        try {
+            ResultSet resultSet = executor.executeSelect(executor.loadSQLResource(script), args);
             DataTable table = new DataTable(resultSet.getMetaData().getTableName(1));
             table.populateTable(resultSet);
             resultSet.close();

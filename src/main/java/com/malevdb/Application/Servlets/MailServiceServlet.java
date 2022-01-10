@@ -1,24 +1,24 @@
 package com.malevdb.Application.Servlets;
 
+import Utils.JSON.JSONReader;
 import Utils.Logging.Logger;
+import com.malevdb.Database.DataTable;
 import com.malevdb.Localization.LocalizationManager;
 import com.malevdb.MailService.MNSAuthenticator;
 import com.malevdb.MailService.MessageBean;
-import com.malevdb.Utils.JSONReader;
+import com.malevdb.MailService.MessageTemplateBean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @Controller
@@ -26,8 +26,13 @@ public class MailServiceServlet {
     private final String MNSErrorMessage = "Mail notification service is unavailable. Check connection properties or try restart";
     private final String serviceURL = MNSAuthenticator.loadServiceRemoteURL();
 
-    @GetMapping(value = "/mail")
-    public String doGet(RedirectAttributes attributes) {
+    @GetMapping("/mail")
+    public String doGetDef() {
+        return "redirect:/mail/templates/apply/0";
+    }
+
+    @GetMapping(value = "/mail/recipients/{recipients}")
+    public String doGet(@PathVariable String[] recipients,  RedirectAttributes attributes) {
         try {
             ResponseEntity<String> responseEntity = new RestTemplate().exchange(serviceURL + "/status",
                     HttpMethod.GET, new HttpEntity<String>(MNSAuthenticator.getHeaders()), String.class);
@@ -40,6 +45,51 @@ public class MailServiceServlet {
             ServletUtils.showPopup(attributes, MNSErrorMessage + "\n" + e.getMessage(), "error");
             return "redirect:/";
         }
+        if(recipients != null && recipients.length > 0) {
+            StringBuilder builder = new StringBuilder();
+            for (String recipient : recipients) {
+                if(!recipient.isEmpty() && !recipient.toLowerCase(Locale.ROOT).equals("null"))
+                    builder.append(recipient).append(";");
+            }
+            attributes.addAttribute("recipients", builder.toString());
+        }
+        return "redirect:/mail/templates/apply/0";
+    }
+
+    @GetMapping(value = {"/mail/templates", "/mail/templates/get"})
+    public String getTemplatesDef() {
+        return "redirect:/mail/templates/get/0";
+    }
+
+    @GetMapping("/mail/templates/get/{id}")
+    public String getTemplates(@PathVariable String id, Model model) {
+        ResponseEntity<MessageTemplateBean[]> responseEntity = new RestTemplate()
+                .exchange(serviceURL + "/data/templates",
+                HttpMethod.GET, new HttpEntity<MessageTemplateBean>(MNSAuthenticator.getHeaders()),
+                MessageTemplateBean[].class);
+        model.addAttribute("templates", responseEntity.getBody());
+        if(id == null || id.isEmpty())
+            id = "0";
+        model.addAttribute("currentTemplate", id);
+        return "views/mailTemplatesView";
+    }
+
+    @GetMapping("/mail/templates/apply/{id}")
+    public String applyTemplate(@PathVariable String id, RedirectAttributes attributes, Model model, HttpServletRequest request) {
+        if(id == null || id.isEmpty()) {
+            ServletUtils.showPopup(attributes, "ID is null", "error");
+            return "redirect:/mail/templates";
+        }
+        String rec =  request.getParameter("recipients");
+        model.addAttribute("recipients",rec);
+        ResponseEntity<MessageTemplateBean> responseEntity = new RestTemplate().exchange(serviceURL + "/data/templates/get/"+id,
+                HttpMethod.GET, new HttpEntity<String>(MNSAuthenticator.getHeaders()), MessageTemplateBean.class);
+        model.addAttribute("appliedTemplate", responseEntity.getBody());
+        ResponseEntity<MessageTemplateBean[]> responseEntityList = new RestTemplate()
+                .exchange(serviceURL + "/data/templates",
+                        HttpMethod.GET, new HttpEntity<MessageTemplateBean>(MNSAuthenticator.getHeaders()),
+                        MessageTemplateBean[].class);
+        model.addAttribute("templates", responseEntityList.getBody());
         return "views/mailService";
     }
 
@@ -69,6 +119,60 @@ public class MailServiceServlet {
         }
         ServletUtils.showPopup(attributes, "Sent successfully", "warning");
         return "redirect:/mail";
+    }
+
+    @PostMapping("/mail/templates/save/{id}")
+    public String saveTemplate(@PathVariable String id, HttpServletRequest request, RedirectAttributes attributes) {
+        if(id == null || id.isEmpty()) {
+            ServletUtils.showPopup(attributes, "ID is null", "error");
+            return "redirect:/mail/templates";
+        }
+        String subject = request.getParameter("subject");
+        String content = request.getParameter("message");
+        String signature = request.getParameter("signature");
+        MessageTemplateBean template = new MessageTemplateBean(Integer.parseInt(id), subject, content, signature);
+        ResponseEntity<String> responseEntity = new RestTemplate().exchange(serviceURL + "/data/templates/update/"+id,
+                HttpMethod.PUT, new HttpEntity<MessageTemplateBean>(template, MNSAuthenticator.getHeaders()), String.class);
+        if(JSONReader.getArgumentValue(responseEntity.getBody(), "status").equals("OK")) {
+            ServletUtils.showPopup(attributes, "Saved", "warning");
+            return "redirect:/mail/templates/"+JSONReader.getArgumentValue(responseEntity.getBody(), "id");
+        } else {
+            ServletUtils.showPopup(attributes, "Error: " + JSONReader.getArgumentValue(responseEntity.getBody(),
+                    "message"), "error");
+            return "redirect:/mail/templates/get/"+id;
+        }
+    }
+
+    @PostMapping("/mail/templates/new")
+    public String addTemplate(RedirectAttributes attributes) {
+        ResponseEntity<String> responseEntity = new RestTemplate().exchange(serviceURL + "/data/templates/add",
+                HttpMethod.POST, new HttpEntity<String>(MNSAuthenticator.getHeaders()), String.class);
+        if(JSONReader.getArgumentValue(responseEntity.getBody(), "status").equals("OK")) {
+            ServletUtils.showPopup(attributes, "Added", "warning");
+            return "redirect:/mail/templates/"+JSONReader.getArgumentValue(responseEntity.getBody(), "id");
+        } else {
+            ServletUtils.showPopup(attributes, "Error: " + JSONReader.getArgumentValue(responseEntity.getBody(),
+                    "message"), "error");
+            return "redirect:/mail/templates";
+        }
+    }
+
+    @PostMapping("/mail/templates/delete/{id}")
+    public String deleteTemplate(@PathVariable String id,  RedirectAttributes attributes) {
+        if(id == null || id.isEmpty()) {
+            ServletUtils.showPopup(attributes, "ID is null", "error");
+            return "redirect:/mail/templates";
+        }
+        ResponseEntity<String> responseEntity = new RestTemplate().exchange(serviceURL + "/data/templates/delete/"+id,
+                HttpMethod.DELETE, new HttpEntity<String>(MNSAuthenticator.getHeaders()), String.class);
+        if(JSONReader.getArgumentValue(responseEntity.getBody(), "status").equals("OK")) {
+            ServletUtils.showPopup(attributes, "Deleted", "warning");
+            return "redirect:/mail/templates";
+        } else {
+            ServletUtils.showPopup(attributes, "Error: " + JSONReader.getArgumentValue(responseEntity.getBody(),
+                    "message"), "error");
+            return "redirect:/mail/templates";
+        }
     }
 
     @PutMapping("/mail/updateCredentials/{user}/{pass}")

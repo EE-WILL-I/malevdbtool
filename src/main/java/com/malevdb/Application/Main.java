@@ -3,6 +3,7 @@ package com.malevdb.Application;
 import Utils.FileResourcesUtils;
 import Utils.Logging.Logger;
 import Utils.Properties.PropertyReader;
+import com.malevdb.Application.Security.AuthorizationManager;
 import com.malevdb.Application.Security.SecurityHandlerInterceptor;
 import com.malevdb.MailService.MNSAuthenticator;
 import com.malevtool.Connection.DatabaseConnector;
@@ -63,6 +64,8 @@ public class Main {
         FileResourcesUtils.RESOURCE_PATH = resPath;
         PropertyReader.loadServerProps();
         MNSAuthenticator.loadProvidedUserCredentials();
+        if(!AuthorizationManager.loadConfiguredServiceUserCredentials())
+            AuthorizationManager.loadDefaultServiceUserCredentials();
     }
 
     private static void start(String[] args) throws Exception {

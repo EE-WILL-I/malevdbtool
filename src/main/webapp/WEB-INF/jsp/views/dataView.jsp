@@ -10,9 +10,11 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.10.3/jquery-ui.min.js"></script>
 </head>
+<body onload="init()">
 <jsp:include page="../elements/header.jsp"/>
 <jsp:include page="../elements/popup.jsp"/>
 <div class="content_holder">
+    <jsp:include page="../elements/dataViewTab.jsp"/>
     <form id="form" action="${pageContext.request.contextPath}/data" method="GET">
         <div>
             <h3><%=LocalizationManager.getString("dataView.select_a_table")%></h3>

@@ -3,6 +3,7 @@ package com.malevdb.Application.SessionManagement;
 import Utils.Logging.Logger;
 import com.malevdb.Localization.LocalizationManager;
 import com.malevtool.Proccessing.SQLExecutor;
+import org.springframework.http.HttpHeaders;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -12,6 +13,7 @@ import java.util.*;
 
 public class SessionManager {
     private static final SQLExecutor sqlExecutor = SQLExecutor.getInstance();
+
 
     public static boolean checkSession(HttpServletRequest request) {
         Logger.log(SessionManager.class, "Checking user session", 4);
