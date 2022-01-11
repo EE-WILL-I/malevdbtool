@@ -12,9 +12,9 @@
     <div style="width: 100%;">
         <ul>
             <form action = "load/excel" method = "post" enctype = "multipart/form-data">
-                <input type = "file" name = "file" size = "50" />
+                <input id="excel_1" type = "file" name = "file" size = "50" />
                 <br/>
-                <input type = "submit" value = "<%=LocalizationManager.getString("excelLoader.upload")%>" />
+                <input id="excel_2" type = "submit" value = "<%=LocalizationManager.getString("excelLoader.upload")%>" />
             </form>
         </ul>
         <% if(pageContext.getRequest().getAttribute("errorMessage") != null) {%>

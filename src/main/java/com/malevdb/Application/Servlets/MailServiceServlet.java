@@ -82,14 +82,24 @@ public class MailServiceServlet {
         }
         String rec =  request.getParameter("recipients");
         model.addAttribute("recipients",rec);
-        ResponseEntity<MessageTemplateBean> responseEntity = new RestTemplate().exchange(serviceURL + "/data/templates/get/"+id,
-                HttpMethod.GET, new HttpEntity<String>(MNSAuthenticator.getHeaders()), MessageTemplateBean.class);
-        model.addAttribute("appliedTemplate", responseEntity.getBody());
-        ResponseEntity<MessageTemplateBean[]> responseEntityList = new RestTemplate()
-                .exchange(serviceURL + "/data/templates",
-                        HttpMethod.GET, new HttpEntity<MessageTemplateBean>(MNSAuthenticator.getHeaders()),
-                        MessageTemplateBean[].class);
-        model.addAttribute("templates", responseEntityList.getBody());
+        try {
+            ResponseEntity<MessageTemplateBean> responseEntity = new RestTemplate().exchange(serviceURL + "/data/templates/get/" + id,
+                    HttpMethod.GET, new HttpEntity<String>(MNSAuthenticator.getHeaders()), MessageTemplateBean.class);
+            model.addAttribute("appliedTemplate", responseEntity.getBody());
+        } catch (Exception e) {
+            Logger.log(this, e.getMessage(), 2);
+            ServletUtils.showPopup(attributes, e.getMessage(), "error");
+        }
+        try {
+            ResponseEntity<MessageTemplateBean[]> responseEntityList = new RestTemplate()
+                    .exchange(serviceURL + "/data/templates",
+                            HttpMethod.GET, new HttpEntity<MessageTemplateBean>(MNSAuthenticator.getHeaders()),
+                            MessageTemplateBean[].class);
+            model.addAttribute("templates", responseEntityList.getBody());
+        } catch (Exception e) {
+            Logger.log(this, e.getMessage(), 2);
+            ServletUtils.showPopup(attributes, e.getMessage(), "error");
+        }
         return "views/mailService";
     }
 

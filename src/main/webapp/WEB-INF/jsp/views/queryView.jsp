@@ -28,14 +28,14 @@
     <div class="content_holder">
         <jsp:include page="../elements/dataViewTab.jsp"/>
         <div class="q_div">
-            <div style="height: auto;">
+            <div id="q_div1" style="height: auto;">
                 <nav class="q_tab">
                     <a href="${pageContext.request.contextPath}/data/query/get_stipend_candidats.sql?args=*">Candidats</a>
                     <a href="${pageContext.request.contextPath}/data/query/get_students_with_stipend.sql?args=*">Stipend</a>
                 </nav>
             </div>
             <%if(table != null) {%>
-            <div style="width: 100%">
+            <div id="q_div2" style="width: 100%">
                 <jsp:include page="../elements/staticTable.jsp"/>
             </div>
         </div>

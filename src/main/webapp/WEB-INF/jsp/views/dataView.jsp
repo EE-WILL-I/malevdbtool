@@ -16,10 +16,10 @@
 <div class="content_holder">
     <jsp:include page="../elements/dataViewTab.jsp"/>
     <form id="form" action="${pageContext.request.contextPath}/data" method="GET">
-        <div>
-            <h3><%=LocalizationManager.getString("dataView.select_a_table")%></h3>
+        <div class="select_table">
+            <h3 id="select_h3"><%=LocalizationManager.getString("dataView.select_a_table")%></h3>
             <jsp:include page="../elements/tableSelect.jsp"/>
-            <button type="button" onclick="loadTable()"><%=LocalizationManager.getString("dataView.load_table")%></button>
+            <button id="table_load" type="button" onclick="loadTable()"><%=LocalizationManager.getString("dataView.load_table")%></button>
         </div>
         <div>
             <jsp:include page="../elements/interactiveTable.jsp"/>
@@ -38,7 +38,7 @@
             </fieldset>
         </form>
     </div>
-    <button onclick='addData()'><%=LocalizationManager.getString("dataView.add_row")%></button>
+    <button id="table_add" onclick='addData()'><%=LocalizationManager.getString("dataView.add_row")%></button>
 </div>
 <jsp:include page="../elements/footer.jsp" />
 </body>

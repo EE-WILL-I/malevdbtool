@@ -39,7 +39,7 @@
         <nav class="q_tab">
             <%if(templates != null)
                 for(MessageTemplateBean template : templates) {%>
-            <button onclick="setTemplate('<%=template.getSubject()%>', '<%=template.getContent()%>', '<%=template.getSignature()%>')"><%=template.getSubject()%></button>
+            <button class="mail_temp" onclick="setTemplate('<%=template.getSubject()%>', '<%=template.getContent()%>', '<%=template.getSignature()%>')"><%=template.getSubject()%></button>
             <%}%>
         </nav>
         <form id="mail_form" action="${pageContext.request.contextPath}/mail/send" method="post">

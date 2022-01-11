@@ -21,7 +21,7 @@
     if(table_name == null || table_name.isEmpty())
         table_name = "people";
 %>
-<div>
+<div id="table_div">
     <select id="selected_table" name="selected_table">
         <%
             Iterator<JSONObject> iterator = tables.iterator();
